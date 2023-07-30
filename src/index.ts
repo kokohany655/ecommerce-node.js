@@ -4,12 +4,16 @@ import morgan from 'morgan'
 import database from './config/database'
 import categoryRoutes from './routes/categoryRoutes'
 import subcategoryRoutes from './routes/subcategoryRoutes'
+import brandRoutes from './routes/brandRoutes'
+import productRoutes from './routes/productRoutes'
 import ApiError from './utils/ApiError'
 import globalError from './middleware/globalErrorMiddleware'
 
 dotenv.config()
 
+
 const app:Application = express()
+app.use(express.json())
 
 const port = process.env.PORT || 8000
 
@@ -25,6 +29,8 @@ if(process.env.NODE_ENV === "development"){
 //routes
 app.use('/api/v1/categories' , categoryRoutes)
 app.use('/api/v1/subcategories' , subcategoryRoutes)
+app.use('/api/v1/brands' , brandRoutes)
+app.use('/api/v1/products' , productRoutes)
 
 //middle ware for catching error wrong route
 app.all('*' , (req:Request , res:Response , next:NextFunction)=>{

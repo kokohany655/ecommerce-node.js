@@ -1,4 +1,4 @@
-import { check } from "express-validator";
+import { check  } from "express-validator";
 import { validate } from "./validate";
 import Category from "../model/CategoryModel";
 
@@ -29,6 +29,20 @@ export const createSubcategory = [
 
 export const updateSubcategory = [
     check('id').isMongoId().withMessage('invalid id'),
+    check('name')
+    .notEmpty().withMessage('name is required')
+    .isLength({min : 2})
+    .isLength({max : 20}),
+    check('category').isMongoId().withMessage('invalid id')
+    .custom(categoryId=>{
+        return Category.find(categoryId).then(category=>{
+            if(!category){
+                return Promise.reject(new Error('this category does not exist'))
+            }
+        })
+    })
+    
+    ,
     validate
 ]
 
