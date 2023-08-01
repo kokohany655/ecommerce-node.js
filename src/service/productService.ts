@@ -11,10 +11,10 @@ export const GetProduct = asyncHandler(async(req:Request,res:Response):Promise<v
     const countDocuments = await Product.countDocuments()
     
     let apiFeature = new ApiFeature(Product.find(), req.query)
-        .selectFields()
-        .filter()
         .paginate(countDocuments)
+        .filter()
         .search("Products")
+        .selectFields()
         .sort()
 
     const {mongooseQuery , pagination} = apiFeature

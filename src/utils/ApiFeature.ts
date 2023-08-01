@@ -9,12 +9,15 @@ export class ApiFeature {
     filter(){
         //filtering 
         const queryObject = {...this.queryString}
-        const excludesFields = ["page" , "limit" , "sort" , " fields"]
+        const excludesFields = ["page" , "limit" , "sort" , "fields"]
         excludesFields.forEach(e=>{delete queryObject[e]})
 
         let queryStr = JSON.stringify(queryObject)
+
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g , (match)=>`$${match}`)
 
+        console.log(queryStr);
+        console.log(JSON.parse(queryStr));
         
         this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr))
 
@@ -35,26 +38,27 @@ export class ApiFeature {
 
     selectFields(){
         //select fields you want 
-        if(this.queryString.fields as string){
-            const fields = this.queryString.fields.split(',').join(' ')
+        if(this.queryString.fields){
+            console.log(this.queryString.fields)
+            const fields = Object(this.queryString.fields).split(',').join(' ')
             console.log(fields)
             this.mongooseQuery = this.mongooseQuery.select(fields)
         }else{
-            this.mongooseQuery = this.mongooseQuery .select('-__v')
+            this.mongooseQuery = this.mongooseQuery.select('-__v')
         }
 
         return this
     }
 
-    search(modelName:string) {
+    search(modelName?:string) {
         if (this.queryString.keyword) {
+            console.log(this.queryString.keyword)
           let query:any = {};
           if (modelName === 'Products') {
             query.$or = [
               { title: { $regex: this.queryString.keyword, $options: 'i' } },
               { description: { $regex: this.queryString.keyword, $options: 'i' } },
             ];
-            console.log(query.$or[0])
           } else {
             query = { name: { $regex: this.queryString.keyword, $options: 'i' } };
           }

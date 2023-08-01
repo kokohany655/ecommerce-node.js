@@ -3,13 +3,24 @@ import Brand from "../model/BrandModel";
 import asyncHandler from 'express-async-handler'
 import slugify  from "slugify";
 import ApiError from "../utils/ApiError";
+import { ApiFeature } from "../utils/ApiFeature";
+import { QueryOptions } from "mongoose";
 
 export const getAllBrands = asyncHandler(async(req:Request , res:Response ):Promise<void>=>{
-    const page = (req.query.page as unknown) as number || 1
-    const limit = (req.query.limit as unknown) as number || 5 
-    const startIndex = (page - 1) * limit 
-    const brand = await Brand.find().skip(startIndex).limit(limit)
-    res.status(200).json({result : brand.length , data : brand})
+    const countDocuments = await Brand.countDocuments()
+    
+    let apiFeature = new ApiFeature(Brand.find(), req.query)
+        .paginate(countDocuments)
+        .filter()
+        .search()
+        .selectFields()
+        .sort()
+
+    const {mongooseQuery , pagination} = apiFeature
+    const brand:QueryOptions = await mongooseQuery
+
+    
+    res.status(200).json({result : brand.length, pagination , data : brand})
 })
 
 export const getBrandById = asyncHandler(async(req:Request , res:Response , next:NextFunction):Promise<void>=>{

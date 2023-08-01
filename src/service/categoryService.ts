@@ -3,13 +3,22 @@ import asyncHandler from 'express-async-handler'
 import Category from '../model/CategoryModel'
 import ApiError from '../utils/ApiError'
 import slugify from 'slugify'
+import { QueryOptions } from 'mongoose'
+import { ApiFeature } from '../utils/ApiFeature'
 
 
 export const getAllCategory = asyncHandler(async(req:Request,res:Response):Promise<void>=>{
-    const page = (req.query.page as unknown)as number || 1
-    const limit = (req.query.limit as unknown)as number || 5
-    const startIndex = (page - 1) * limit
-    const category:any=await Category.find().skip(startIndex).limit(limit);
+    const countDocuments = await Category.countDocuments()
+    
+    let apiFeature = new ApiFeature(Category.find(), req.query)
+        .paginate(countDocuments)
+        .filter()
+        .search()
+        .selectFields()
+        .sort()
+
+    const {mongooseQuery , pagination} = apiFeature
+    const category:QueryOptions = await mongooseQuery
     res.status(200).send({result: category.length , data:category})
 })
 

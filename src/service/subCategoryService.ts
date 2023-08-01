@@ -3,6 +3,8 @@ import SubCategory from "../model/SubCategoryModel";
 import asyncHandler from 'express-async-handler'
 import ApiError from "../utils/ApiError";
 import slugify from "slugify";
+import { ApiFeature } from "../utils/ApiFeature";
+import { QueryOptions } from "mongoose";
 
 export const createSubCategoryByCategoryId = (req:Request , res:Response , next:NextFunction):void=>{
     //create a subcategory by its parent categoyId
@@ -11,15 +13,21 @@ export const createSubCategoryByCategoryId = (req:Request , res:Response , next:
 }
 
 export const getAllSubCategory = asyncHandler(async(req:Request , res:Response):Promise<void>=>{
-    const page = (req.query.page as unknown) as number || 1
-    const limit = (req.query.limit as unknown) as number || 5
-    const startIndex = (page - 1 ) * limit
-
     let filterObject:{category?:String} = {category:""}
     if(req.params.categoryId) filterObject = {category : req.params.categoryId}
 
-    const subcategory = await SubCategory.find(filterObject).skip(startIndex).limit(limit).populate({path: "category" , select :'name '})
-    res.status(200).json({result:subcategory.length , data: subcategory})
+    const countDocuments = await SubCategory.countDocuments()
+    
+    let apiFeature = new ApiFeature(SubCategory.find(filterObject), req.query)
+        .paginate(countDocuments)
+        .filter()
+        .search()
+        .selectFields()
+        .sort()
+
+    const {mongooseQuery , pagination} = apiFeature
+    const subcategory:QueryOptions = await mongooseQuery
+    res.status(200).json({result:subcategory.length, pagination , data: subcategory})
 })
 
 export const getSubCateogryById = asyncHandler(async(req:Request , res:Response , next:NextFunction):Promise<void>=>{
