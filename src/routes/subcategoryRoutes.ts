@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { createSubCategory, createSubCategoryByCategoryId, deletesubCategory, getAllSubCategory, getSubCateogryById, updateSubCategory } from "../service/subCategoryService";
+import {createSubCategory, createSubCategoryByCategoryId,  deletesubCategory,  getAllSubCategory, getSubCateogryById, updateSubCategory } from "../service/subCategoryService";
 import { createSubcategory, deleteSubcategory, getSubcategory, updateSubcategory } from "../validator/subCategoryValidator";
 
 const router:Router = express.Router({mergeParams:true})
@@ -11,6 +11,6 @@ router.route('/')
 router.route('/:id')
 .get(getSubcategory , getSubCateogryById)
 .put(updateSubcategory , updateSubCategory)
-.delete( deleteSubcategory ,deletesubCategory)
+.delete( deleteSubcategory , deletesubCategory)
 
 export default router

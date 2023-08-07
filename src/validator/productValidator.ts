@@ -1,7 +1,8 @@
-import { check } from 'express-validator'
+import { body, check } from 'express-validator'
 import {validate} from './validate'
 import Category from '../model/CategoryModel'
 import SubCategory from '../model/SubCategoryModel'
+import slugify from 'slugify'
 
 export const getProductValidator = [
     check('id').isMongoId().withMessage('invalid id')
@@ -14,7 +15,12 @@ export const createProductValidator = [
         .notEmpty()
         .withMessage('product title required')
         .isLength({min:3})
-        .withMessage('must be at least 3 char'),
+        .withMessage('must be at least 3 char')
+        .custom((val , {req})=>{
+            req.body.slug = slugify(val)
+            return true
+        })
+        ,
     check('description')
         .notEmpty()
         .withMessage('product description required')
@@ -100,7 +106,12 @@ export const updateProductValidator = [
         .notEmpty()
         .withMessage('product title required')
         .isLength({min:3})
-        .withMessage('must be at least 3 char'),
+        .withMessage('must be at least 3 char')
+        .custom((val , {req})=>{
+            req.body.slug = slugify(val)
+            return true
+        })
+        ,
     check('description')
         .notEmpty()
         .withMessage('product description required')
@@ -176,7 +187,8 @@ export const updateProductValidator = [
                     return Promise.reject(new Error('subcategory not belong to thi category'))
                 }
             })
-        }),
+        })
+        ,
         validate
 ]
 

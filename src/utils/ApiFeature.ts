@@ -40,7 +40,7 @@ export class ApiFeature {
         //select fields you want 
         if(this.queryString.fields){
             console.log(this.queryString.fields)
-            const fields = Object(this.queryString.fields).split(',').join(' ')
+            const fields = String(this.queryString.fields).split(',').join(' ')
             console.log(fields)
             this.mongooseQuery = this.mongooseQuery.select(fields)
         }else{
@@ -54,7 +54,7 @@ export class ApiFeature {
         if (this.queryString.keyword) {
             console.log(this.queryString.keyword)
           let query:any = {};
-          if (modelName === 'Products') {
+          if (modelName === 'Product') {
             query.$or = [
               { title: { $regex: this.queryString.keyword, $options: 'i' } },
               { description: { $regex: this.queryString.keyword, $options: 'i' } },

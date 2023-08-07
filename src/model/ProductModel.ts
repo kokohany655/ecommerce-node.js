@@ -65,6 +65,14 @@ const productSchema:Schema =new mongoose.Schema({
 {timestamps:true}
 )
 
+productSchema.pre(/^find/ , function(next){
+    this.populate({
+        path:"category",
+        select :"name -_id"
+    })
+    next()
+})
+
 const product =mongoose.model('Product' , productSchema)
 
 export default product

@@ -1,5 +1,6 @@
-import { check } from 'express-validator'
+import { body, check } from 'express-validator'
 import {validate} from './validate'
+import slugify  from "slugify";
 
 export const getBrandVadlidator = [
     check('id')
@@ -12,6 +13,10 @@ export const createBrandValidator = [
     .notEmpty().withMessage('name is required')
     .isLength({min : 2})
     .isLength({max : 20})
+    .custom((val , {req})=>{
+        req.body.slug = slugify(val)
+        return true
+    })
     ,
     validate
 ]
@@ -23,6 +28,10 @@ export const updateBrandValdiator = [
     .notEmpty().withMessage('name is required')
     .isLength({min : 2})
     .isLength({max : 20})
+    .custom((val , {req})=>{
+        req.body.slug = slugify(val)
+        return true
+    })
     ,validate
     
 ]

@@ -1,6 +1,7 @@
-import { check  } from "express-validator";
+import { body, check  } from "express-validator";
 import { validate } from "./validate";
 import Category from "../model/CategoryModel";
+import slugify from "slugify";
 
 
 export const getSubcategory = [
@@ -14,7 +15,12 @@ export const createSubcategory = [
     check('name')
     .notEmpty().withMessage('name is required')
     .isLength({min: 2}).withMessage('too short')
-    .isLength({max: 20}).withMessage('too long'),
+    .isLength({max: 20}).withMessage('too long')
+    .custom((val ,{req})=>{
+        req.body.slug = slugify(val)
+        return true
+    })
+    ,
     check('category').isMongoId().withMessage('is invalid id')
     .custom(cateogryId =>{
       return Category.findById(cateogryId).then(category=>{
@@ -32,7 +38,12 @@ export const updateSubcategory = [
     check('name')
     .notEmpty().withMessage('name is required')
     .isLength({min : 2})
-    .isLength({max : 20}),
+    .isLength({max : 20})
+    .custom((val ,{req})=>{
+        req.body.slug = slugify(val)
+        return true
+    })
+    ,
     check('category').isMongoId().withMessage('invalid id')
     .custom(categoryId=>{
         return Category.find(categoryId).then(category=>{

@@ -1,57 +1,13 @@
-import { NextFunction, Request, Response } from 'express'
-import asyncHandler from 'express-async-handler'
 import Category from '../model/CategoryModel'
-import ApiError from '../utils/ApiError'
-import slugify from 'slugify'
-import { QueryOptions } from 'mongoose'
-import { ApiFeature } from '../utils/ApiFeature'
+import { createOne, deleteOne, getAll, getOne, updateOne } from './handlerFactory'
 
 
-export const getAllCategory = asyncHandler(async(req:Request,res:Response):Promise<void>=>{
-    const countDocuments = await Category.countDocuments()
-    
-    let apiFeature = new ApiFeature(Category.find(), req.query)
-        .paginate(countDocuments)
-        .filter()
-        .search()
-        .selectFields()
-        .sort()
+export const getAllCategory = getAll(Category)
 
-    const {mongooseQuery , pagination} = apiFeature
-    const category:QueryOptions = await mongooseQuery
-    res.status(200).send({result: category.length , data:category})
-})
+export const getCategoryById = getOne(Category)
 
-export const getCategoryById = asyncHandler(async(req:Request , res:Response , next:NextFunction):Promise<void>=>{
-    const category = await Category.findById(req.params.id)
-    if(!category){
-        return next(new ApiError('category not found' , 404))
-    }
-    res.status(200).send({date:category})
-})
+export const createCategory = createOne(Category)
 
-export const createCategory = asyncHandler(async(req:Request, res:Response):Promise<void>=>{
-    const {name} = req.body
-    const category = new Category({name ,slug:slugify(name)})
-    await category.save()
-    res.status(201).send({data:category})
-})
+export const updateCategory  = updateOne(Category)
 
-export const updateCategory  = asyncHandler(async(req:Request, res:Response, next:NextFunction):Promise<void>=>{
-    const {name} = req.body
-    const category = await Category.findByIdAndUpdate({_id:req.params.id}, {name,slug: slugify(name)} , {new:true})
-
-    if(!category){
-        return next(new ApiError('category not found' , 404))
-    }
-    res.status(200).send({date:category})
-
-})
-
-export const deleteCategory = asyncHandler(async(req:Request,res:Response, next:NextFunction):Promise<void>=>{
-    const category = await Category.findByIdAndDelete(req.params.id)
-    if(!category){
-        return next(new ApiError('category not found' , 404))
-    }
-    res.status(204).send('success')
-})
+export const deleteCategory = deleteOne(Category)
