@@ -36,7 +36,6 @@ export const createSubcategory = [
 export const updateSubcategory = [
     check('id').isMongoId().withMessage('invalid id'),
     check('name')
-    .notEmpty().withMessage('name is required')
     .isLength({min : 2})
     .isLength({max : 20})
     .custom((val ,{req})=>{

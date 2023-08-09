@@ -8,12 +8,17 @@ import brandRoutes from './routes/brandRoutes'
 import productRoutes from './routes/productRoutes'
 import ApiError from './utils/ApiError'
 import globalError from './middleware/globalErrorMiddleware'
+import path from 'path'
 
 dotenv.config()
 
 
 const app:Application = express()
+
+
 app.use(express.json())
+app.use(express.static(path.join(__dirname , 'upload')))
+
 
 const port = process.env.PORT || 8000
 

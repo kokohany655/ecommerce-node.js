@@ -1,4 +1,4 @@
-import { body, check } from 'express-validator'
+import { check } from 'express-validator'
 import {validate} from './validate'
 import slugify  from "slugify";
 
@@ -25,7 +25,6 @@ export const updateBrandValdiator = [
     check('id')
     .isMongoId().withMessage('invalid id'),
     check('name')
-    .notEmpty().withMessage('name is required')
     .isLength({min : 2})
     .isLength({max : 20})
     .custom((val , {req})=>{

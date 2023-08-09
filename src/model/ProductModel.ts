@@ -73,6 +73,29 @@ productSchema.pre(/^find/ , function(next){
     next()
 })
 
+const setImage= (doc:any)=>{
+    if(doc.imageCover){
+        doc.imageCover = `${process.env.BASE_URL}/product/${doc.imageCover}`
+    }
+
+    if(doc.image){
+        const imageList: string[] = []
+        doc.image.forEach((img:any)=> {
+            const image_url = `${process.env.BASE_URL}/product/${img}`
+            imageList.push(image_url)
+        });
+        doc.image = imageList
+    }
+}
+
+productSchema.post('init', function(doc) {
+    setImage(doc)
+  });
+
+  productSchema.post('save', function(doc) {
+    setImage(doc)
+  });
+
 const product =mongoose.model('Product' , productSchema)
 
 export default product
