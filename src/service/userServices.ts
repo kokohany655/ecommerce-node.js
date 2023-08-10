@@ -5,9 +5,16 @@ import { createOne, deleteOne, getAll, getOne, updateOne } from "./handlerFactor
 import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
 import sharp from 'sharp'
+import jwt from 'jsonwebtoken'
+
 import { NextFunction, Request, Response } from 'express'
 import expressAsyncHandler from 'express-async-handler'
 import ApiError from "../utils/ApiError";
+
+
+const generateToken = (payload:string)=> jwt.sign({userId : payload} , `${process.env.JWT_SECRET}` , {expiresIn : process.env.JWT_EXPIRE_DATE} )
+
+
 
 export const uploadUserImage = uploadImage("profileImg")
 
@@ -32,6 +39,8 @@ export const getAllUser = getAll(User)
 export const getUserById = getOne(User)
 
 export const createUser = createOne(User)
+
+export const delelteUser = deleteOne(User)
 
 export const updateUser =  expressAsyncHandler(async(req:Request ,res:Response , next:NextFunction):Promise<void>=>{
 const {name ,slug , email , phone , profileImg} = req.body
@@ -65,4 +74,47 @@ export const changePassword = expressAsyncHandler(async(req:Request , res:Respon
 })
 
 
-export const delelteUser = deleteOne(User)
+export const getLoggedUserData = expressAsyncHandler(async(req:Request , res:Response , next:NextFunction)=>{
+    
+        req.params.id = req?.user?._id
+    
+    next()
+})
+
+export const updatePasswordLoggedUser = expressAsyncHandler(async(req:Request, res:Response,next:NextFunction)=>{
+    const user = await User.findByIdAndUpdate(
+        req?.user?._id, 
+        {
+            password : req.body.newPassword,
+            passwordChangedAt: Date.now()
+        },
+        {new:true}
+
+    )
+   
+    const token = generateToken(String(user?._id))
+
+    res.status(200).json({data:user , token})
+})
+
+
+export const updateLoggedUserData = expressAsyncHandler(async(req:Request, res:Response,next:NextFunction)=>{
+    const user = await User.findByIdAndUpdate(
+        req?.user?._id,
+        {
+            name : req.body.name,
+            phone : req.body.phone,
+            email : req.body.email
+        },
+        {new:true}
+    )
+    res.status(200).json({data : user})
+
+})
+
+
+export const deleteLoggedUserData = expressAsyncHandler(async(req:Request, res:Response,next:NextFunction)=>{
+    await User.findByIdAndUpdate(req?.user?._id , {active:false} , {new:true} )
+
+    res.status(204).json({message:'success'})
+})

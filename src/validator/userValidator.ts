@@ -50,6 +50,7 @@ export const createUserValidator = [
 ]
 
 export const updateUserValdiator = [
+    check('id').isMongoId().withMessage('invlid id'),
     check('name')
     .isLength({min : 2})
     .isLength({max : 20})
@@ -108,4 +109,27 @@ export const deleteUserValidator = [
     check('id')
     .isMongoId().withMessage('invalid id')
     , validate
+]
+
+
+
+export const updateLoggedUserDataValidator = [
+    check('name')
+    .isLength({min : 2})
+    .isLength({max : 20})
+    .custom((val , {req})=>{
+        req.body.slug = slugify(val)
+        return true
+    }),
+    check("email")
+    .isEmail().withMessage('enter valid email')
+    .custom(val=>{
+        return User.findOne({email:val}).then((user)=>{
+            if(user){
+                return Promise.reject(new Error('email is already found'))
+            }
+        })
+    }),
+    check('phone').optional().isMobilePhone(['ar-EG' , 'ar-SA']).withMessage('should Eg and SA phone number'),
+    validate
 ]

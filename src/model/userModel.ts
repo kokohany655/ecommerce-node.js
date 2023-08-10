@@ -20,7 +20,9 @@ const userSchema =new mongoose.Schema(
         passwordChangeAt: Date,
         phone:String,
         profileImg : String,
-
+        resetPasswordCode:String,
+        resetPasswordCodeExpire:Number,
+        resetPasswordVerified:Boolean,
         password:{
             type:String ,
             required:true,
@@ -31,6 +33,10 @@ const userSchema =new mongoose.Schema(
             type:String,
             enum:["user", "manager" , "admin"],
             default: "user"
+        },
+        active:{
+            type: Boolean,
+            default: true
         }
     },
     {
