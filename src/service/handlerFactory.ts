@@ -1,7 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import ApiError from "../utils/ApiError";
 import { NextFunction, Request, Response } from 'express';
-import slugify from "slugify";
 import { ApiFeature } from '../utils/ApiFeature';
 import { QueryOptions } from 'mongoose';
 

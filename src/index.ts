@@ -2,10 +2,14 @@ import express, { Application, NextFunction, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import database from './config/database'
+
 import categoryRoutes from './routes/categoryRoutes'
 import subcategoryRoutes from './routes/subcategoryRoutes'
 import brandRoutes from './routes/brandRoutes'
 import productRoutes from './routes/productRoutes'
+import userRoutes from './routes/userRoutes'
+import authRoutes from './routes/authRoutes'
+
 import ApiError from './utils/ApiError'
 import globalError from './middleware/globalErrorMiddleware'
 import path from 'path'
@@ -36,6 +40,8 @@ app.use('/api/v1/categories' , categoryRoutes)
 app.use('/api/v1/subcategories' , subcategoryRoutes)
 app.use('/api/v1/brands' , brandRoutes)
 app.use('/api/v1/products' , productRoutes)
+app.use('/api/v1/users' , userRoutes)
+app.use('/api/v1/auth' , authRoutes)
 
 //middle ware for catching error wrong route
 app.all('*' , (req:Request , res:Response , next:NextFunction)=>{

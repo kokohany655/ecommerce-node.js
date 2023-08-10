@@ -2,5 +2,6 @@ export interface Error {
     message?: string,
     statusCode?:number,
     status?: string,
-    stack?: string
+    stack?: string,
+    name?:string
 }

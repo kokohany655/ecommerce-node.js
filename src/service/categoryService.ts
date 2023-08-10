@@ -13,12 +13,15 @@ export const uploadCategoryImage = uploadImage("image")
 export const resizeImage =expressAsyncHandler((req:Request ,res:Response ,next:NextFunction)=>{
 
     const filename =  `category-${uuidv4()}-${Date.now()}.jpeg`
-    sharp(req?.file?.buffer)
-    .resize(600, 600)
-    .toFormat('jpeg')
-    .jpeg({quality : 90})
-    .toFile(`./src/upload/category/${filename}`)
-    req.body.image = filename
+    if(req?.file?.buffer){
+        sharp(req?.file?.buffer)
+        .resize(600, 600)
+        .toFormat('jpeg')
+        .jpeg({quality : 90})
+        .toFile(`./src/upload/category/${filename}`)
+        req.body.profileImg = filename
+        
+    }
     next()
 })
 
