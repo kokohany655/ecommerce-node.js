@@ -131,5 +131,6 @@ export const updateLoggedUserDataValidator = [
         })
     }),
     check('phone').optional().isMobilePhone(['ar-EG' , 'ar-SA']).withMessage('should Eg and SA phone number'),
+    check("profileImg").optional(),
     validate
 ]

@@ -104,7 +104,8 @@ export const updateLoggedUserData = expressAsyncHandler(async(req:Request, res:R
         {
             name : req.body.name,
             phone : req.body.phone,
-            email : req.body.email
+            email : req.body.email,
+            profileImg : req.body.profileImg
         },
         {new:true}
     )

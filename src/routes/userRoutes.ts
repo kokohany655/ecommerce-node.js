@@ -12,7 +12,7 @@ router.get('/getme' ,protect , getLoggedUserData , getUserById)
 
 router.put('/changeMyPassword' , protect , changeUserPasswordValidator , updatePasswordLoggedUser)
 
-router.put('/updateme' , protect , updateLoggedUserDataValidator ,updateLoggedUserData)
+router.put('/updateme' , protect , uploadUserImage , resizeImage ,updateLoggedUserDataValidator ,updateLoggedUserData)
 
 router.delete('/deleteme' , protect , deleteLoggedUserData)
 
