@@ -9,6 +9,7 @@ import brandRoutes from './routes/brandRoutes'
 import productRoutes from './routes/productRoutes'
 import userRoutes from './routes/userRoutes'
 import authRoutes from './routes/authRoutes'
+import reviewRoutes from './routes/reviewRoutes'
 
 import ApiError from './utils/ApiError'
 import globalError from './middleware/globalErrorMiddleware'
@@ -42,6 +43,7 @@ app.use('/api/v1/brands' , brandRoutes)
 app.use('/api/v1/products' , productRoutes)
 app.use('/api/v1/users' , userRoutes)
 app.use('/api/v1/auth' , authRoutes)
+app.use('/api/v1/reviews' , reviewRoutes)
 
 //middle ware for catching error wrong route
 app.all('*' , (req:Request , res:Response , next:NextFunction)=>{
