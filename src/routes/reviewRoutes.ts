@@ -1,13 +1,13 @@
 import  express, { Router } from "express";
 import { allowTo, protect } from '../service/authServices'
-import { createReview, delelteReview, getAllReview, getReviewById, updateReview } from "../service/reviewServices";
+import { createFilterObjectforProduct, createReview, delelteReview, getAllReview, getReviewById, setProductIdToBody, updateReview } from "../service/reviewServices";
 import { createReviewValidator, deleteReviewValidator, updateReviewValidator } from "../validator/reviewValidator";
 
-const router:Router = express.Router()
+const router:Router = express.Router({mergeParams:true})
 
 router.route('/')
-.get(getAllReview)
-.post(protect,allowTo('user'), createReviewValidator ,createReview)
+.get(createFilterObjectforProduct,getAllReview)
+.post(protect,allowTo('user'), setProductIdToBody,createReviewValidator ,createReview)
 
 router.route("/:id")
 .get( getReviewById)

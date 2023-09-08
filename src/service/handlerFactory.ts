@@ -7,6 +7,7 @@ import { QueryOptions } from 'mongoose';
 export const deleteOne= (Model:any)=>{
    return asyncHandler(async(req:Request , res:Response , next:NextFunction):Promise<void>=>{
         const documents = await Model.findByIdAndDelete(req.params.id)
+        documents.remove()
         if(!documents){
             return next(new ApiError(`no ${Model} found with this id`, 404))
         }
@@ -17,6 +18,7 @@ export const deleteOne= (Model:any)=>{
 export const updateOne = (Model:any)=> {
     return asyncHandler(async(req:Request ,res:Response , next:NextFunction):Promise<void>=>{
         const document = await Model.findByIdAndUpdate({_id:req.params.id} , req.body , {new:true})
+        document.save()
         if(!document){
             return next(new ApiError(`no ${Model} found with this id` , 404))
         }

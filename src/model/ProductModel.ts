@@ -107,6 +107,6 @@ productSchema.post('init', function(doc) {
     setImage(doc)
   });
 
-const product =mongoose.model('Product' , productSchema)
+const Product =mongoose.model('Product' , productSchema)
 
-export default product
+export default Product

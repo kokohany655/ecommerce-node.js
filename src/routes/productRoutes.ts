@@ -2,9 +2,11 @@ import express , { Router } from "express";
 import { CreateProduct, DeleteProduct, GetProduct, UpdateProduct, getProductById, resizeProductImage, uploadProductImage } from "../service/productService";
 import { createProductValidator, deleteProductValidator, getProductValidator, updateProductValidator } from "../validator/productValidator";
 import { allowTo, protect } from "../service/authServices";
-
+import reviewRoutes from './reviewRoutes'
 
 const router:Router = express.Router()
+
+router.use('/:productId/reviews' , reviewRoutes)
 
 router.route('/')
 .get(GetProduct)

@@ -23,7 +23,7 @@ export const updateReviewValidator = [
             if(!review){
                 throw new Error('no review with this id')
             }
-            if(review?.user?.toString() != req.user._id.toString()){
+            if(review?.user?._id.toString() != req.user._id.toString()){
                 throw new Error('you can not update this ne it is not your commit')
             }
         })

@@ -17,7 +17,7 @@ export const createFilterObject = (req:Request ,res:Response, next:NextFunction)
     let filterObject:{category?:String} = {category:""}
     if(req.params.categoryId) filterObject = {category : req.params.categoryId}
     req.body.filterObject  = filterObject
-    return next();
+    return next()
 } 
 
 export const getAllSubCategory = getAll(SubCategory)
